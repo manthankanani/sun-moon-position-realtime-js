@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html>
+	<!--
+		Reference: https://www.satellite-calculations.com/Satellite/suncalc.htm
+		-->
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="Author" content="Manthan Kanani">
+		<meta name="description" content="Sun and Moon Position Calculator">
+		<meta name="keywords" content="Sun,Moon,Longitude,Latitude,Declination,Azimuth,Elevation,Satellite,position,Mean Anomaly,Longitude of  erihelion,Eccentricity,Obliquity,Geometric,Right Ascension,GMST0,Distance" >
+		<title>Sun and Moon Position Calculator</title>
+		<script src="scripts/sunpos.online.sat.calc.js" ></script>
+		<script src="scripts/sites.online.sat.calc.js"></script>
+		<script src="scripts/magneticdeclination.online.sat.calc.js"></script>
+		<script src="scripts/geolocation.online.sat.calc.js"></script>
+		
+		<style>
+			p {
+			margin: 0;
+			}
+		</style>
+	</head>
+	<body bgcolor="#C0BBB7">
+		<p align="center">&nbsp;</p>
+		<p align="center"><font face="Trebuchet MS" size="5" color="#000000">Sun & Moon Position Calculator</font></p>
+		<script>
+			document.write(html_suncalc_updated);
+		</script>
+		<p align="center">
+			<font color="#000000" size="2"
+				face="Trebuchet MS">
+				Page loaded
+				<script>
+					document.write(Date());
+				</script>
+			</font>
+		</p>
+		<p align="center"><font color="#000000" size="2"
+			face="Trebuchet MS">More calculators at </font><a
+			href="https://github.com/manthankanani"><font
+			color="#000000" size="2" face="Trebuchet MS">https://github.com/manthankanani</font></a></p>
+		<p align="center">
+			<br>
+			<br>
+			<br>
+		</p>
+		<div align="center">
+		<center>
+			<table border="0" cellspacing="0" bgcolor="#C0BBB7"  >
+				<td valign="top"  >
+					<div id="adspace1">
+					</div>
+				</td>
+				<td valign="top">
+				</td>
+				<td >
+					<table border="1" cellpadding="0" cellspacing="0" width="600"
+						bgcolor="#C0C0C0" bordercolor="#808080">
+						<tr>
+							<td valign="top" width="240"><font color="#000000" size="2"
+								face="Trebuchet MS">Site Location</font></td>
+							<td valign="top" nowrap width="58">&nbsp;</td>
+							<td valign="top" bgcolor="#FFFFFF" width="294">
+								<form method="post" name="Site">
+									<p>
+										<font color="#000000" face="Trebuchet MS">
+											<span title="Select your nearest location or set the position manually">
+												<select
+													name="Position" size="1"
+													onchange="ReadPosition();CalculateCoordinate();CalculateAngles();SetCookie();document.Magnetic.Variation.value=formatnumber(getMagneticDeclination(1,1),6);loadfromlist(6,1*document.Latitude.Degrees.value,1*document.Longitude.Degrees.value,document.Latitude.Direction.value,document.Longitude.Direction.value)" style="font-family: Trebuchet MS">
+													<script>
+														document.write(sites);
+													</script>
+												</select>
+											</span>
+										</font>
+										<font color="#000000">
+											<input onclick="initialize()" type="button" value="Get location automatic from Google" title="Try to get your coordinates automaticly from Google" />
+											<script>
+												document.write(sites_updated);
+											</script>
+										</font>
+									</p>
+								</form>
+							</td>
+						</tr>
+						<tr title="mapbox . uncomment to keep it work">
+							<td colspan="3" align="right"  >
+								<!------------------------ mapbox ///// uncomment to keep it work ----------->
+								<!-- <script src="scripts/map.online.sat.calc.js"></script>
+								<script src="http://maps.google.com/maps?file=api&v=2&key=AIzaSyD-A6Ca6pWCnwv_Cx18_WjEfc4_lZ5HwKs" type="text/javascript"></script>
+								<div id="map" align="right"  onclick="getposition();document.Magnetic.Variation.value=formatnumber(getMagneticDeclination(1,1),6);CalculateCoordinate();CalculateAngles()" onmousemove="onmousemoveinmap()" title="Scroll-up or left double click to zoom. Scroll-down or right double click to unzoom " style="width: 100%; height: 400px"></div> -->
+							</td>
+						</tr>
+						<tr >
+							<td colspan="3"  >
+								<form name="output">
+									Search Address:
+									<input name="address" type="text" size="64"/>
+									<input onclick="showAddress(document.output.address.value);CalculateCoordinate();CalculateAngles();;document.Magnetic.Variation.value=formatnumber(getMagneticDeclination(1,1),6)" type="button" value="Get coordinates for address" />
+									<!--   <br>Adress for selected location
+										<input name="address_2" type="text" size="48" />//-->
+									<!-- <input onclick="showAddress(document.output.address.value);ReadCookie();set_todays_date();SelectSatellite();CalculateCoordinate();CalculateAngles()" type="button" value="Get coordinates for address" />
+										//-->
+							</td>
+						<tr ><td colspan="2"  >
+						<font color="#000000" size="2" face="Trebuchet MS">
+							<div class="eventtext">
+								<div>Lattitude: <span id="latspan"></span></div>
+								<div>Longitude: <span id="lngspan"></span></div>
+								<div>Selected position: <span id="latlong"></span></div>
+								<div>Address: <span id="selected_address"></span></div>
+								<div>Zoomlevel: <span id="zoom_level"></span></div>
+							</div>
+						</font>
+						</form>
+						</td>
+						<td>
+						<input onclick="initialize();document.Magnetic.Variation.value=formatnumber(getMagneticDeclination(1,1),6);CalculateCoordinate();CalculateAngles();load()"  type="button" value="Get location automatic from Google" title="Try to get your coordinates automaticly from Google" />
+						<br>
+						</td></tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Site Latitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td bgcolor="#FFFFFF" width="294"><form method="post" name="Latitude">
+						<p><font color="#000000" size="2" face="Trebuchet MS"><input type="text"
+							size="6" name="Degrees" value="59.92"
+							onchange="SetCookie();CalculateCoordinate();CalculateAngles()"
+							style="font-family: Trebuchet MS"><select
+							name="Direction" size="1"
+							onchange="SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">
+						<option selected value="North">North</option>
+						<option value="South">South</option>
+						</select>
+						<input type="text"
+							size="1" name="LatDegrees" 
+							onchange="CalculateLat();SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">deg.
+						<input type="text"
+							size="1" name="LatMinutes" 
+							onchange="CalculateLat();SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">min
+						<input type="text"
+							size="1" name="LatSeconds" 
+							onchange="CalculateLat();SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">sec
+						</font></p>
+						</form>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Site Longitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td bgcolor="#FFFFFF" width="294"><form method="post" name="Longitude">
+						<p><font color="#000000" size="2" face="Trebuchet MS"><!--webbot
+							bot="Validation" s-data-type="Number" s-number-separators="x." --><input type="text"
+							size="6" name="Degrees" value="10.75"
+							onchange="SetCookie();CalculateCoordinate();CalculateAngles()"
+							style="font-family: Trebuchet MS"><select
+							name="Direction" size="1"
+							onchange="SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">
+						<option selected value="East">East</option>
+						<option value="West">West</option>
+						</select>
+						<input type="text"
+							size="1" name="LonDegrees" 
+							onchange="CalculateLon();SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">deg.
+						<input type="text"
+							size="1" name="LonMinutes" 
+							onchange="CalculateLon();SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">min
+						<input type="text"
+							size="1" name="LonSeconds" 
+							onchange="CalculateLon();SetCookie();CalculateAngles()"
+							style="font-family: Trebuchet MS">sec
+						</font></p>
+						</form>
+						</td>
+						</tr>
+						<form method="post" name="TimeAndDate">
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Day</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS"></font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="6" name="Day" onchange="CalculateAngles()"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Month</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS"></font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="6" name="Month" onchange="CalculateAngles()"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Year</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS"></font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="6" name="Year" onchange="CalculateAngles()"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Hour</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS"></font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="6" name="Hour" onchange="CalculateAngles()"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Minute</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS"></font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="6" name="Minute" onchange="CalculateAngles()"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Seconds</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS"></font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="6" name="Seconds" onchange="CalculateAngles()"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						</form>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Magnetic Variation</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><form method="post" name="Magnetic"><input
+							type="text" size="7" name="Variation"
+							style="font-family: Trebuchet MS"></form></font></p>
+						</td>
+						</tr> 
+						<form method="post" name="Angles">
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Mean Anomaly</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="MeanAnomaly"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>  
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Longitude of Perihelion</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="Perihelion"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Eccentricity</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="Eccentricity"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Obliquity</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="Obliquity"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Azimuth (True North)</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SunAzimuth"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>   
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Elevation</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"><span title="Negative= Below horizon"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SunElevation"
+							style="font-family: Trebuchet MS">Atmospheric refraction included</span></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Geometric Elevation</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"><span title="Negative= Below horizon"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SunGeometricElevation"
+							style="font-family: Trebuchet MS"></span></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Declination</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SunDeclination"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Hourangle</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="30" name="SunHourangle"
+							style="font-family: Trebuchet MS" title="Negative value= Sun is east of Solar noon/transit (time is before Solar noon/transit)"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Longitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SunLongitude"
+							style="font-family: Trebuchet MS" ></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Right Ascension</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="RA"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun GMST0</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="GMST0"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Earth Longitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="30" name="SunEarthLongitude"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Sun Earth Latitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SunEarthLatitude"
+							style="font-family: Trebuchet MS" title="Negative for Southern hemispheare"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Satellite Longitude<p>(The sat-longitude which gives same azimuth as the Sun)</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="40" name="SatelliteLongitude"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Satellite Elevation</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SatelliteElevation"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">|Sun Elevation-Satellite Elevation|</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SunSatElDifference"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Ecliptic Longitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonLon"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Ecliptic Latitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonLat"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Right Ascension</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonRA"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Declination</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonDecl"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Hourangle</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="30" name="MoonHourangle"
+							style="font-family: Trebuchet MS" title="Negative value= Moon is east of Moon transit (time is before Moon transit)"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Topocentric Hourangle</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="30" name="MoonGcHourangle"
+							style="font-family: Trebuchet MS" title="Negative value= Moon is east of Moon transit (time is before Moon transit)"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Topocentric Right Ascension</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="20" face="Trebuchet MS"><input
+							type="text" size="12" name="TopMoonRA"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Topocentric Declination</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="20" face="Trebuchet MS"><input
+							type="text" size="12" name="TopMoonDecl"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Earth Longitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="30" name="MoonEarthLon"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Earth Latitude</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="MoonGcLatitude"
+							style="font-family: Trebuchet MS" title="Negative for Southern hemispheare"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Azimuth (True North)</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonAz"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Elevation</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonEl"
+							style="font-family: Trebuchet MS">Atmospheric refraction included</font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Geometric Elevation</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonGeoEl"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Moon Distance</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Km</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="12" name="MoonDistance"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Satellite Longitude<p>(The sat-longitude which gives same azimuth as the Moon)</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="40" name="SatelliteLongitudeMoon"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">Satellite Elevation</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="SatelliteElevationMoon"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						<tr>
+						<td valign="top" width="240"><font color="#000000" size="2"
+							face="Trebuchet MS">|Moon Elevation-Satellite Elevation|</font></td>
+						<td valign="top" width="58"><font color="#000000" size="2"
+							face="Trebuchet MS">Degrees</font></td>
+						<td valign="top" width="294">
+						<p><font color="#000000" face="Trebuchet MS"></font><font
+							color="#000000" size="2" face="Trebuchet MS"><input
+							type="text" size="7" name="MoonSatElDifference"
+							style="font-family: Trebuchet MS"></font></p>
+						</td>
+						</tr>
+						</form>
+					</table>
+				</td>
+				<td valign="top">
+				<br>
+				</td>
+				<td valign="top" bgcolor="#C0BBB7" >
+				</td>
+			</table>
+		</center>
+		</div>
+		<p align=center><input onclick="update()" type=button value="Start/Stop Autoupdater" name=button2 style="font-family: Trebuchet MS"></font></P>
+		<p align=center><input onclick="printresult();printupdate()" type=button value="Print Result in New window" name=button3 style="font-family: Trebuchet MS"></font></P>
+		<p align=center><input onclick="alert(document.cookie)" type=button value="View cookie" name=button1 style="font-family: Trebuchet MS"></font></P>
+		<p align="center"><font color="#000000" size="2"
+			face="Trebuchet MS">© 2012 Manthan Kanani<br>
+			</font>
+		</p>
+		<p align="center">
+			<font color="#000000" size="2"
+				face="Trebuchet MS">Site location list </font>
+			<script>
+				document.write(sites_updated);
+			</script>
+			<font color="#000000" size="2"
+				face="Trebuchet MS"></font>
+			<script>
+				document.write(suncalc_updated);
+			</script>
+		</p>
+		<p align="center"><font color="#000000" size="2"
+			face="Trebuchet MS">Calculated after the method on </font><a
+			href="http://www.stjarnhimlen.se/comp/tutorial.html"><font
+			color="#000000" size="2" face="Trebuchet MS">reference</font></a></p>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+		<script>
+			$(document).ready(function(){
+				load();
+				document.Magnetic.Variation.value=formatnumber(getMagneticDeclination(1,1),6);
+				set_todays_date();
+				CalculateCoordinate();
+				CalculateAngles();
+				// window.setTimeour("AutoCalculateAngles()", 1000);
+			});
+		</script>
+	</body>
+</html>
